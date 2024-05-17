@@ -37,24 +37,24 @@
 
     <div class="filters">
         <div class="tendency">
-            <p class="titleCard">TENDENCY</p>
+            <p class="titleCard">TREND</p>
             <img src="images/tendency.png" width="60px" id="imgTend">
             <div class="radio">
                 <div>
-                    <input type="radio" id="positiva" name="opttendencia" value="positiva" checked
-                        onchange="defineTendency(this.value);changeTendencyImg()" class="">
-                    <label for="positiva">Positive</label>
+                    <input type="radio" id="positive" name="opttendencia" value="positive" checked
+                        onchange="defineTrend(this.value);" class="">
+                    <label for="positive">Positive</label>
                 </div>
 
                 <div>
-                    <input type="radio" id="estavel" name="opttendencia" value="estavel"
-                        onchange="defineTendency(this.value);changeTendencyImg()">
-                    <label for="estavel">Stable</label>
+                    <input type="radio" id="stable" name="opttendencia" value="stable"
+                        onchange="defineTrend(this.value);">
+                    <label for="stable">Stable</label>
                 </div>
                 <div>
-                    <input type="radio" id="negativa" name="opttendencia" value="negativa"
-                        onchange="defineTendency(this.value);changeTendencyImg()">
-                    <label for="negativa">Negative</label>
+                    <input type="radio" id="negative" name="opttendencia" value="negative"
+                        onchange="defineTrend(this.value);">
+                    <label for="negative">Negative</label>
                 </div>
 
 
@@ -64,9 +64,11 @@
         <div class="quantity">
             <p class="titleCard">Number of users on the journey</p>
             <select id="number" class="select">
-                <option value="a">1,000 - 10,000</option>
-                <option value="b">10,000 - 50,000</option>
-                <option value="c">50,000 - 1,500,000</option>
+                <option value="a">2,015 - 2,908</option>
+                <option value="b">2,908 - 3,907</option>
+                <option value="c">3,907 - 8,373</option>
+                <option value="d">8,373 - 16,095</option>
+                <option value="e">Over 16,095</option>
             </select>
         </div>
     </div>

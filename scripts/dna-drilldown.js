@@ -15,7 +15,7 @@ var id_time;
 var totalCustomers;
 var jsonPromise;
 var jsonFiltersPromise;
-var tendency;
+var selectedTrend;
 var completeData;
 var filter = "a";
 
@@ -41,12 +41,16 @@ $(document).ready(function () {
   jsonPromise = $.getJSON("files/dataJson.json");
   jsonFiltersPromise = $.getJSON("files/filters.json");
 
-  defineTendency("positiva");
+  defineTrend("positive");
 
 })
 
-function defineTendency(optTendency) {
-  tendency = optTendency;
+function defineTrend(opttrend) {
+  let imgTend = document.getElementById("imgTend");
+  selectedTrend = opttrend;
+
+  imgTend.setAttribute('src', "images/" + selectedTrend + ".png")
+
   loadData();
 }
 
@@ -72,21 +76,21 @@ function filterData() {
 
     let filteredJourneys = {}
     keys.forEach(k => {
-     if((completeData[k]["count"] >= min) && (completeData[k]["count"] <= max - 1)){
-      filteredJourneys[k] = completeData[k]
-     }
+      if ((completeData[k]["count"] > min ) && (completeData[k]["count"] <= max)) {
+        filteredJourneys[k] = completeData[k]
+      }
     });
 
     loadSetup(filteredJourneys);
     loadChart(config);
-    
+
   });
 }
 
 function loadSetup(
   JSON,
 ) {
-  
+
   let attribute = "account_movement";
   let keys = Object.keys(JSON)
 
@@ -94,9 +98,12 @@ function loadSetup(
   keys.forEach(k => {
 
     let slope = JSON[k][attribute]["slope"];
-    let color = defineLineColor(slope)
 
-    if (verifyTendency(slope, tendency)) {
+    const result = analyzeSlope(slope, selectedTrend);
+    let color = result.color;
+    let trend = result.trendMatch;
+
+    if (trend) {
       let dataset = {
         label: k,
         count: JSON[k]["count"],
@@ -110,8 +117,6 @@ function loadSetup(
 
       datasets.push(dataset);
     }
-
-
   });
 
   data = {
@@ -153,7 +158,6 @@ function loadSetup(
           events: ['click'],
           position: "bottom",
           onClick: function (e, legendItem) {
-            // https://codepen.io/jordanwillis/pen/BWKKKo?editors=0010
             var index = legendItem.datasetIndex;
             var ci = this.chart;
             var alreadyHidden =
@@ -176,15 +180,12 @@ function loadSetup(
             });
 
             ci.update();
-
-
           },
         },
       },
 
     },
   };
-  // </block:config>
 }
 
 
@@ -251,58 +252,33 @@ function loadChart(config) {
   if (chart != undefined) {
     chart.destroy();
   }
-  //ctx.ondblclick = onDblClick;
   ctx.onmousemove = onmousemove;
   chart = new Chart(ctx, config);
   chart.render();
 };
 
 
-
-
-function changeTendencyImg() {
-  var imgTend = document.getElementById("imgTend");
-  var positive = document.getElementById("positiva");
-  var stable = document.getElementById("estavel");
-
-  if (positive.checked == true) {
-    imgTend.setAttribute('src', "images\\positive.png")
-  } else if (stable.checked == true) {
-    imgTend.setAttribute('src', "images\\stable.png")
-  } else {
-    imgTend.setAttribute('src', "images\\negative.png")
-  }
-
-}
-
-
 const closeModal = () => {
   modal.classList.remove('show')
 }
 
-function defineLineColor(paramSlope) {
-  let colorLine = "";
-  if (paramSlope > 0) {
-    colorLine = "#0000FF";
-  } else if (paramSlope == 0) {
-    colorLine = "#FFFF00";
-  } else if (paramSlope < 0) {
-    colorLine = "#FF0000";
-  }
-  return colorLine;
-};
 
-function verifyTendency(paramSlope) {
-  if ((tendency == "positiva") & (paramSlope > 0)) {
-    return true;
+function analyzeSlope(paramSlope, trend) {
+  const colorLine = paramSlope > 0 ? "#0000FF" :
+    paramSlope === 0 ? "#FFFF00" :
+      "#FF0000";
 
-  } else if ((tendency == "negativa") & (paramSlope < 0)) {
-    return true;
+  const trends = {
+    "positive": paramSlope > 0,
+    "negative": paramSlope < 0,
+    "stable": paramSlope === 0
+  };
 
-  } else if ((tendency == "estavel") & (paramSlope == 0)) {
-    return true;
 
-  } else {
-    return false;
-  }
+  const istrendMatch = trends[trend] || false;
+
+  return {
+    color: colorLine,
+    trendMatch: istrendMatch
+  };
 }
