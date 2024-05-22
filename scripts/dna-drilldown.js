@@ -76,7 +76,7 @@ function filterData() {
 
     let filteredJourneys = {}
     keys.forEach(k => {
-      if ((completeData[k]["count"] > min ) && (completeData[k]["count"] <= max)) {
+      if ((completeData[k]["count"] > min) && (completeData[k]["count"] <= max)) {
         filteredJourneys[k] = completeData[k]
       }
     });
@@ -129,6 +129,8 @@ function loadSetup(
     type: "line",
     data: data,
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       events: ["click", "touchstart", "touchmove", "touchend"],
       scales: {
         y: {
@@ -234,9 +236,17 @@ function showModal(posX, posY, account_movement, color) {
 
   $('#content-modal').html(content);
 
+
+  let windowWidth = window.innerWidth;
+
+  if (windowWidth < 480) {
+    modal.style.left = posX + 50 + "px";
+    modal.style.top = posY + 250 + "px";
+  } else {
+    modal.style.left = posX + 180 + "px";
+    modal.style.top = posY + 150 + "px";
+  }
   modal.classList.add('show')
-  modal.style.left = posX + 180 + "px";
-  modal.style.top = posY + 150 + "px";
 
 }
 
