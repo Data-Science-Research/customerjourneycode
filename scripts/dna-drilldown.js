@@ -239,10 +239,16 @@ function showModal(posX, posY, account_movement, color) {
 
   let windowWidth = window.innerWidth;
 
-  if (windowWidth < 480) {
-    modal.style.left = posX + 50 + "px";
+  if (windowWidth < 480) { //mobile
     modal.style.top = posY + 250 + "px";
-  } else {
+    if (posX < (windowWidth / 2)) {
+      modal.style.left = posX + 50 + "px";
+      modal.style.right = 0 + "px";
+    }else{
+      modal.style.left = 0 + "px";
+      modal.style.right = (posX/2)  + "px";
+    }
+  } else { //web
     modal.style.left = posX + 180 + "px";
     modal.style.top = posY + 150 + "px";
   }
